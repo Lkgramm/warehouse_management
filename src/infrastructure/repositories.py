@@ -1,41 +1,59 @@
-from sqlalchemy.orm import Session
 from typing import List
-from domain.models import Order, Product, Customer
-from domain.repositories import ProductRepository, OrderRepository, CustomerRepository
-from .orm import ProductORM, OrderORM, CustomerORM
+
+from sqlalchemy.orm import Session
+
+from domain.models import Customer, Order, Product
+from domain.repositories import (CustomerRepository, OrderRepository,
+                                 ProductRepository)
+
+from .orm import CustomerORM, OrderORM, ProductORM
+
 
 class SqlAlchemyProductRepository(ProductRepository):
     def __init__(self, session: Session):
-        self.session=session
+        self.session = session
 
-    def add(self, product:Product):
+    def add(self, product: Product):
         product_orm = ProductORM(
-            name=product.name,
-            quntity=product.quntity
-            price=product.price
+            name=product.name, quntity=product.quantity, price=product.price
         )
         self.session.add(product_orm)
 
-    def get(self, product_id: int)->Product:
-        product_orm= self.session.query(ProductORM).filter_by(id=product_id).one()
-        return Product(id=product_orm.id, name=product_orm.name, quntity=product_orm.quntity, price=product_orm.price)
+    def get(self, product_id: int) -> Product:
+        product_orm = self.session.query(ProductORM).filter_by(id=product_id).one()
+        return Product(
+            id=product_orm.id,
+            name=product_orm.name,
+            quntity=product_orm.quntity,
+            price=product_orm.price,
+        )
 
     def list(self) -> List[Product]:
-        products_orm= self.session.query(ProductORM).all()
-        return [Product(id=p.id, name=p.name, quntity=p.quntity, price=p.price) for p in products_orm]
+        products_orm = self.session.query(ProductORM).all()
+        return [
+            Product(id=p.id, name=p.name, quntity=p.quntity, price=p.price)
+            for p in products_orm
+        ]
+
 
 class SqlAlchemyOrderRepository(OrderRepository):
     def __init__(self, session: Session):
-        self.session=session
+        self.session = session
 
-    def add(self, order:Order):
+    def add(self, order: Order):
         order_orm = OrderORM()
-        order_orm.products= [self.session.query(ProductORM).filter_by(id=p.id).one() for p in order.products]
+        order_orm.products = [
+            self.session.query(ProductORM).filter_by(id=p.id).one()
+            for p in order.products
+        ]
         self.session.add(order_orm)
 
-    def get(self, order_id: int)->Order:
-        order_orm= self.session.query(OrderORM).filter_by(id=order_id).one()
-        products = [Product(id=p.id, name=p.name, quntity=p.quntity, price=p.price) for p in order_orm.products]
+    def get(self, order_id: int) -> Order:
+        order_orm = self.session.query(OrderORM).filter_by(id=order_id).one()
+        products = [
+            Product(id=p.id, name=p.name, quntity=p.quntity, price=p.price)
+            for p in order_orm.products
+        ]
         return Order(id=order_orm.id, products=products)
 
     def list(self) -> List[Order]:
@@ -46,10 +64,11 @@ class SqlAlchemyOrderRepository(OrderRepository):
                 products=[
                     Product(id=p.id, name=p.name, quantity=p.quantity, price=p.price)
                     for p in order_orm.products
-                ]
+                ],
             )
             for order_orm in orders_orm
         ]
+
 
 class SqlAlchemyCustomerRepository(CustomerRepository):
     def __init__(self, session: Session):
@@ -61,11 +80,10 @@ class SqlAlchemyCustomerRepository(CustomerRepository):
 
     def get(self, customer_id: int) -> Customer:
         customer_orm = self.session.query(CustomerORM).filter_by(id=customer_id).one()
-        return Customer(id=customer_orm.id, name=customer_orm.name, email=customer_orm.email)
+        return Customer(
+            id=customer_orm.id, name=customer_orm.name, email=customer_orm.email
+        )
 
     def list(self) -> List[Customer]:
         customers_orm = self.session.query(CustomerORM).all()
         return [Customer(id=c.id, name=c.name, email=c.email) for c in customers_orm]
-
-
-
