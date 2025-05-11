@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine, Column, Integer, String, Float, Table, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
+from .orm import OrderORM
 
 Base = declarative_base()
 
@@ -15,6 +16,11 @@ class OrderORM(Base):
     __tablename__ = "orders"
     id = Column(Integer, primary_key=True)
 
+class CustomerORM(Base):
+    __tablename__ = 'customers'
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    email = Column(String)
 
 order_product_assocoations = Table(
     'order_product_assocoations', Base.metadata,
@@ -22,4 +28,4 @@ order_product_assocoations = Table(
     Column('product_id', ForeignKey('products.id'))
 )
 
-OrderOrm.products = relationship("ProductORM", secondary=order_product_assocoations)
+OrderORM.products = relationship("ProductORM", secondary=order_product_assocoations)

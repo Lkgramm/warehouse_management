@@ -28,5 +28,16 @@ class OrderRepository(ABC):
     def list(self) -> List[Order]:
         pass
     
+class CustomerRepository(ABC):
+    @abstractmethod
+    def add(self, customer: Customer):
+        pass
 
+    @abstractmethod
+    def get(self, customer_id: int) -> Customer:
+        pass
+
+    @abstractmethod
+    def list(self) -> List[Customer]:
+        pass
 
