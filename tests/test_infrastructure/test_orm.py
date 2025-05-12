@@ -46,7 +46,7 @@ class TestSuite(unittest.TestCase):
         self.session.query(ProductORM).filter_by(id=product_orm.id).delete()
         self.session.commit()
 
-    @cases([([])])
+    @cases([[]])
     def test_add_get_order(self, products):
         order_orm = OrderORM(products=products)
 

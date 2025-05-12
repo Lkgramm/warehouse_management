@@ -1,6 +1,7 @@
 import pytest
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import Session, sessionmaker
+
 from infrastructure.orm import Base
 from infrastructure.unit_of_work import SqlAlchemyUnitOfWork
 

@@ -1,11 +1,10 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import NoResultFound
+from sqlalchemy.orm import sessionmaker
 
-from domain.models import Customer, Order, Product
 from domain.services import WarehouseService
 from infrastructure.database import DATABASE_URL
-from infrastructure.orm import Base, CustomerORM, OrderORM, ProductORM
+from infrastructure.orm import Base
 from infrastructure.repositories import (SqlAlchemyCustomerRepository,
                                          SqlAlchemyOrderRepository,
                                          SqlAlchemyProductRepository)
@@ -53,7 +52,9 @@ def main():
                 print("Quantity and price must be positive.")
                 continue
 
-            new_product = warehouse_service.create_product(name=name, quantity=quantity, price=price)
+            new_product = warehouse_service.create_product(
+                name=name, quantity=quantity, price=price
+            )
             uow.commit()
             print(f"Product created: {new_product}")
 

@@ -1,7 +1,8 @@
 from typing import List
 
 from .models import Customer, Order, Product
-from .repositories import CustomerRepository, OrderRepository, ProductRepository
+from .repositories import (CustomerRepository, OrderRepository,
+                           ProductRepository)
 
 
 class WarehouseService:

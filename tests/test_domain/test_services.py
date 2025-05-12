@@ -61,12 +61,10 @@ class TestSuite(unittest.TestCase):
 
     @cases(
         [
-            (
-                [
-                    Product(1, "test1", 1, 1),
-                    Product(2, "test2", 2, 2),
-                ]
-            )
+            [
+                Product(1, "test1", 1, 1),
+                Product(2, "test2", 2, 2),
+            ]
         ]
     )
     def test_create_order(self, products):

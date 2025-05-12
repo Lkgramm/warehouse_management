@@ -3,7 +3,8 @@ from typing import List
 from sqlalchemy.orm import Session
 
 from domain.models import Customer, Order, Product
-from domain.repositories import CustomerRepository, OrderRepository, ProductRepository
+from domain.repositories import (CustomerRepository, OrderRepository,
+                                 ProductRepository)
 
 from .orm import CustomerORM, OrderORM, ProductORM
 

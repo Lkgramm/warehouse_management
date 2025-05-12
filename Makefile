@@ -36,7 +36,7 @@ test:
 	$(PYTEST) $(TEST_DIR) -v
 
 lint:
-	$(FLAKE8) $(SRC_DIR) $(TEST_DIR)
+	$(FLAKE8) $(SRC_DIR) $(TEST_DIR) --ignore=E501
 
 format:
 	$(BLACK) $(SRC_DIR) $(TEST_DIR)
