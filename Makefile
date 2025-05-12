@@ -45,10 +45,6 @@ format:
 typecheck:
 	$(MYPY) $(SRC_DIR)
 
-clean:
-	find . -type f -name "*.pyc" -delete
-	find . -type d -name "__pycache__" -delete
-
 run:
 	poetry run python $(SRC_DIR)/main.py
 

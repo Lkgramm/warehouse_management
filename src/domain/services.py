@@ -1,7 +1,7 @@
-from .models import Customer, Order, Product
-from .repositories import (CustomerRepository, OrderRepository,
-                           ProductRepository)
 from typing import List
+
+from .models import Customer, Order, Product
+from .repositories import CustomerRepository, OrderRepository, ProductRepository
 
 
 class WarehouseService:
@@ -25,7 +25,22 @@ class WarehouseService:
         self.order_repo.add(order)
         return order
 
-    def create_customer(self, name: str, email: str) -> Customer:
-        customer = Customer(id=None, name=name, email=email)
+    def create_customer(self, name: str, orders: List[Order]) -> Order:
+        customer = Customer(id=None, name=name, orders=orders)
         self.customer_repo.add(customer)
         return customer
+
+    def get_products_list(self) -> List[Product]:
+        return self.product_repo.list()
+
+    def get_orders_list(self) -> List[Order]:
+        return self.order_repo.list()
+
+    def get_customers_list(self) -> List[Customer]:
+        return self.customer_repo.list()
+
+    def get_product(self, product_id: int) -> Product:
+        return self.product_repo.get(product_id)
+
+    def get_order(self, order_id: int) -> Order:
+        return self.order_repo.get(order_id)

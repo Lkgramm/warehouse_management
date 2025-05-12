@@ -23,4 +23,7 @@ class Order:
 class Customer:
     id: int
     name: str
-    email: str
+    orders: List[Order] = field(default_factory=list)
+
+    def add_order(self, order: Order):
+        self.orders.append(order)

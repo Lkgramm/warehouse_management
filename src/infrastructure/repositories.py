@@ -3,8 +3,7 @@ from typing import List
 from sqlalchemy.orm import Session
 
 from domain.models import Customer, Order, Product
-from domain.repositories import (CustomerRepository, OrderRepository,
-                                 ProductRepository)
+from domain.repositories import CustomerRepository, OrderRepository, ProductRepository
 
 from .orm import CustomerORM, OrderORM, ProductORM
 
@@ -15,7 +14,7 @@ class SqlAlchemyProductRepository(ProductRepository):
 
     def add(self, product: Product):
         product_orm = ProductORM(
-            name=product.name, quntity=product.quantity, price=product.price
+            name=product.name, quantity=product.quantity, price=product.price
         )
         self.session.add(product_orm)
 
@@ -24,14 +23,14 @@ class SqlAlchemyProductRepository(ProductRepository):
         return Product(
             id=product_orm.id,
             name=product_orm.name,
-            quntity=product_orm.quntity,
+            quantity=product_orm.quantity,
             price=product_orm.price,
         )
 
     def list(self) -> List[Product]:
         products_orm = self.session.query(ProductORM).all()
         return [
-            Product(id=p.id, name=p.name, quntity=p.quntity, price=p.price)
+            Product(id=p.id, name=p.name, quantity=p.quantity, price=p.price)
             for p in products_orm
         ]
 
@@ -51,23 +50,21 @@ class SqlAlchemyOrderRepository(OrderRepository):
     def get(self, order_id: int) -> Order:
         order_orm = self.session.query(OrderORM).filter_by(id=order_id).one()
         products = [
-            Product(id=p.id, name=p.name, quntity=p.quntity, price=p.price)
+            Product(id=p.id, name=p.name, quantity=p.quantity, price=p.price)
             for p in order_orm.products
         ]
         return Order(id=order_orm.id, products=products)
 
-    def list(self) -> List[Order]:
+    def list(self) -> List[Product]:
         orders_orm = self.session.query(OrderORM).all()
-        return [
-            Order(
-                id=order_orm.id,
-                products=[
-                    Product(id=p.id, name=p.name, quantity=p.quantity, price=p.price)
-                    for p in order_orm.products
-                ],
-            )
-            for order_orm in orders_orm
-        ]
+        orders = []
+        for order_orm in orders_orm:
+            products = [
+                Product(id=p.id, name=p.name, quantity=p.quantity, price=p.price)
+                for p in order_orm.products
+            ]
+            orders.append(Order(id=order_orm.id, products=products))
+        return orders
 
 
 class SqlAlchemyCustomerRepository(CustomerRepository):
@@ -75,15 +72,45 @@ class SqlAlchemyCustomerRepository(CustomerRepository):
         self.session = session
 
     def add(self, customer: Customer):
-        customer_orm = CustomerORM(name=customer.name, email=customer.email)
-        self.session.add(customer_orm)
+        customers_orm = CustomerORM()
+        customers_orm.name = customer.name
+        customers_orm.orders = [
+            self.session.query(OrderORM).filter_by(id=o.id).one()
+            for o in customer.orders
+        ]
+        self.session.add(customers_orm)
 
     def get(self, customer_id: int) -> Customer:
-        customer_orm = self.session.query(CustomerORM).filter_by(id=customer_id).one()
-        return Customer(
-            id=customer_orm.id, name=customer_orm.name, email=customer_orm.email
-        )
+        customers_orm = self.session.query(CustomerORM).filter_by(id=customer_id).one()
+        orders = [
+            Order(
+                id=o.id,
+                products=[
+                    Product(id=p.id, name=p.name, quantity=p.quantity, price=p.price)
+                    for p in o.products
+                ],
+            )
+            for o in customers_orm.orders
+        ]
+        return Customer(id=customers_orm.id, name=customers_orm.name, orders=orders)
 
     def list(self) -> List[Customer]:
         customers_orm = self.session.query(CustomerORM).all()
-        return [Customer(id=c.id, name=c.name, email=c.email) for c in customers_orm]
+        customers = []
+        for customer_orm in customers_orm:
+            orders = [
+                Order(
+                    id=o.id,
+                    products=[
+                        Product(
+                            id=p.id, name=p.name, quantity=p.quantity, price=p.price
+                        )
+                        for p in o.products
+                    ],
+                )
+                for o in customer_orm.orders
+            ]
+            customers.append(
+                Customer(id=customer_orm.id, name=customer_orm.name, orders=orders)
+            )
+        return customers
