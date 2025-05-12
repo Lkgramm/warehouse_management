@@ -1,0 +1,71 @@
+# === Python ===
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.pyc~
+*.db
+*.sqlite3
+*.log
+*.pot
+*.pyc
+*.DS_Store
+
+# === Virtual Environment ===
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# === Poetry ===
+.cache/
+.build/
+.dist/
+.poetry/
+poetry.lock
+
+# === IDE / Editors ===
+.idea/
+.vscode/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+# === OS generated ===
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.tmp
+
+# === Build Artifacts ===
+build/
+dist/
+*.egg-info/
+*.egg
+*.so
+
+# === Logs and Databases ===
+logs/
+*.log
+*.sqlite
+*.db
+
+# === Coverage reports ===
+.coverage
+htmlcov/
+.pytest_cache/
+
+# === Jupyter Notebooks ===
+.ipynb_checkpoints
+
+# === MyPy ===
+.mypy_cache/
+
+# === Black / isort / Formatting ===
+.black*
+.isort.cfg
