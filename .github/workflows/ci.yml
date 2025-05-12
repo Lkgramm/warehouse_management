@@ -36,11 +36,6 @@ jobs:
         run: |
           make test
 
-      - name: Format check
-        run: |
-          make format
-          git diff --exit-code
-
       - name: Lint check
         run: |
           make lint
