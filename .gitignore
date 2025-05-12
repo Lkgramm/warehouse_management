@@ -1,5 +1,5 @@
 # === Python ===
-__pycache__
+**/__pycache__/
 *.pyc
 *.pyo
 *.pyd
@@ -69,3 +69,6 @@ htmlcov/
 # === Black / isort / Formatting ===
 .black*
 .isort.cfg
+
+# === Created db ===
+Warehouse.db
